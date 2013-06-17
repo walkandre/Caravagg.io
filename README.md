@@ -13,3 +13,16 @@ Brian Eno, Wired 3.05, May 1995
 1. Acquire
 
 2. Visualize
+
+
+Arduino
+==========
+
+
+Processing
+==========
+
+libraries:
+
+<http://www.sojamo.de/libraries/controlP5/> - ControlP5 is a GUI and controller library.
+<http://www.v3ga.net/processing/BlobDetection/> - Computer vision library for finding blobs in an image.
