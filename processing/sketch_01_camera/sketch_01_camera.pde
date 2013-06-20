@@ -21,7 +21,7 @@ void setup() {
   /* gui */
   controlP5 = new ControlP5(this);
   controlP5.addButton("traceBT", 0, 5, 400, 100, 20).setLabel("acquire");
-  controlP5.addSlider("threshold", 0.0f, 1.0f, 5, 435, 100, 20);
+  controlP5.addSlider("threshold", 0.0f, 1.0f, 5, 435, 100, 20).setValue(threshold_value);
 
   /* test image */
   img = loadImage("image.jpg");
@@ -74,8 +74,7 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges) {
       if (drawEdges) {
         strokeWeight(2);
         stroke(0, 255, 0);
-        println(b.getEdgeNb());
-        
+
         beginShape(LINES);
         for (int m = 0; m < b.getEdgeNb(); m++) {
           eA = b.getEdgeVertexA(m);
@@ -83,7 +82,6 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges) {
           if (eA != null && eB != null) {
             vertex(img.width + eA.x * img.width, eA.y * img.height);
             vertex(img.width + eB.x * img.width, eB.y * img.height);
-            
             //line(img.width + eA.x * img.width, eA.y * img.height, img.width + eB.x * img.width, eB.y * img.height);
           }
         }
