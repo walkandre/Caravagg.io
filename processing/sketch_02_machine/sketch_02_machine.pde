@@ -53,19 +53,66 @@ void setup() {
   N_DIFF_RIGHT.set(RIGHT_ANCHOR);  
   N_DIFF_RIGHT.sub(N_POSITION);
   
-  
-  
   // amount to send to the servos
   float DIFF_LEFT = N_DIFF_LEFT.mag() - C_DIFF_LEFT.mag();
   float DIFF_RIGHT = N_DIFF_RIGHT.mag() - C_DIFF_RIGHT.mag();
   
+ 
+  // CONSTANTS
+  float steps = 48;
+  float circ = 3 * 10; // mm
+  float mm_step = circ / steps;
+  
+  
 
   println(DIFF_LEFT);
+  float mm_l = map(DIFF_LEFT, 0, width, 0, 3 * (10 * 100));
+  float l_steps =  mm_l / mm_step;
+  println("mill " +  mm_l);
+  println("mill/step " +  mm_step);
+  println("steps " + l_steps);
+  
+  
+  println("----");
+  
   println(DIFF_RIGHT);
+  float mm_r = map(DIFF_RIGHT, 0, width, 0, 3 * (10 * 100));
+  float r_steps = mm_r / mm_step;
+  println("mill " + mm_r);
+  println("mill/step " +  mm_step);
+  println("steps " +  r_steps);
+
+  float _max = max(abs(l_steps), abs(r_steps));
+  float _min = min(abs(l_steps), abs(r_steps)); 
+
+  float ratio = _min / _max;
+
+  println("ratio " + ratio);
+  
+  float counter = 0.0;
+  
+  int len = int(_max);
+  
+  for(float i = 0; i < len; i++) {
+    
+    if(counter > 1) {
+      counter = counter-1;
+      _min--;
+    }
+    
+    counter += ratio;
+      
+      _max--;
+      
+      
+   println(i + " " + counter + " " + _max + " " + _min);
+  }
+  
+  
   
   // convert pixels to MM. toxi libs to the rescue!!
   // http://toxiclibs.org/docs/core/toxi/math/conversion/UnitTranslator.html
-  
+
   frame = 0;
   background(0);
 }
