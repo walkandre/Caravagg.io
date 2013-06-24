@@ -1,6 +1,6 @@
 
 
-float calculateSteps(PVector anchor, PVector position, PVector destination) {
+float calculateDifference(PVector anchor, PVector position, PVector destination) {
 
   // difference from anchor to current position.
   PVector posDifference = new PVector();

@@ -59,8 +59,8 @@ void mousePressed()
 
 void calculate() {
   // amount to send to the servos
-  float diff_left = calculateSteps(LEFT_ANCHOR, C_POSITION, N_POSITION);
-  float diff_right = calculateSteps(RIGHT_ANCHOR, C_POSITION, N_POSITION);
+  float diff_left = calculateDifference(LEFT_ANCHOR, C_POSITION, N_POSITION);
+  float diff_right = calculateDifference(RIGHT_ANCHOR, C_POSITION, N_POSITION);
 
   // convert pixels to MM. reference:
   // http://toxiclibs.org/docs/core/toxi/math/conversion/UnitTranslator.html

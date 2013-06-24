@@ -22,12 +22,11 @@ ArrayList<Vector3D> positions;
 void setup() {
   size(1024, 480);
   smooth();
-  //fill(0);
   frameRate(30);
   
   drag_var = 1.0;
-  rest_length_left_var = (width - 150) / 2;
-  rest_length_right_var = (width - 150) / 2;
+  rest_length_left_var = (width - 10) / 2;
+  rest_length_right_var = (width - 10) / 2;
  
   physics = new ParticleSystem(0.9, drag_var);
 
@@ -40,9 +39,7 @@ void setup() {
   right_anchor.makeFixed();
   
   float strength = 0.5;
-  
-  println(rest_length_left_var + " " + rest_length_right_var);
-  
+
   // p1, p2, strength, damping, minimum distance 
   left_spring = physics.makeSpring(machine, left_anchor, strength, 0.05, rest_length_left_var);
   left_spring.setRestLength(rest_length_left_var);
@@ -58,21 +55,23 @@ void setup() {
   controlP5.addSlider("drag", 0.0f, 1.0f, 5, 400, 100, 20).setValue(drag_var);
   controlP5.addSlider("restlength_left", 0, width-10, 5, 425, 100, 20).setValue(rest_length_left_var);
   controlP5.addSlider("restlength_right", 0, width-10, 5, 450, 100, 20).setValue(rest_length_right_var);
+  
+  background(255);
 }
 
 void draw() {
 
   physics.tick();
-  
-  Vector3D position = positions.get(positions.size()-1);
+
+  Vector3D position = positions.get(positions.size() - 1);
   Vector3D mPosition = machine.position();
   if(position.x() != mPosition.x() && position.y() != mPosition.y()) {
     positions.add(mPosition);
   }
 
   stroke(204, 102, 0, 10);
-  line(machine.position().x(), mPosition.y(), left_anchor.position().x(), left_anchor.position().y());
-  line(machine.position().x(), mPosition.y(), right_anchor.position().x(), right_anchor.position().y());
+  line(mPosition.x(), mPosition.y(), left_anchor.position().x(), left_anchor.position().y());
+  line(mPosition.x(), mPosition.y(), right_anchor.position().x(), right_anchor.position().y());
 
   int len = positions.size();
   for(int i = 0; i < len; i++) {
@@ -80,14 +79,27 @@ void draw() {
 
     float alpha = map(i, 0, len, 0, 100);
     noStroke();
-    fill(0, 0, 0, 50);
-    ellipse(oldPosition.x(), oldPosition.y(), 5, 5);  
+    fill(0, 0, 0);
+    ellipse(oldPosition.x(), oldPosition.y(), 10, 10);  
   }
 }
 
 void mousePressed()
 {
+  PVector pAnchorLeft = new PVector(left_anchor.position().x(), left_anchor.position().y());
+  PVector pAnchorRight = new PVector(right_anchor.position().x(), right_anchor.position().y());
 
+  PVector position = new PVector(machine.position().x(), machine.position().y());
+
+  PVector destination = new PVector(mouseX, mouseY);
+
+  float left_diff = left_spring.restLength() + calculateDifference(pAnchorLeft, position, destination);
+  float right_diff = left_spring.restLength() + calculateDifference(pAnchorRight, position, destination);
+
+  println(left_diff + " - " + right_diff);
+
+  left_spring.setRestLength(left_diff);
+  right_spring.setRestLength(right_diff);
 }
 
 public void drag(float theValue) {
