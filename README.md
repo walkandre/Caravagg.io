@@ -26,3 +26,4 @@ libraries:
 
 <http://www.sojamo.de/libraries/controlP5/> - ControlP5 is a GUI and controller library.
 <http://www.v3ga.net/processing/BlobDetection/> - Computer vision library for finding blobs in an image.
+<http://murderandcreate.com/physics/> - A simple particle system physics engine for processing.
