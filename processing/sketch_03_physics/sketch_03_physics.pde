@@ -17,19 +17,21 @@ float drag_var;
 float rest_length_left_var;
 float rest_length_right_var;
 
+ArrayList<Vector3D> positions;
+
 void setup() {
   size(1024, 480);
   smooth();
-  fill(0);
+  //fill(0);
   frameRate(30);
   
   drag_var = 1.0;
-  rest_length_left_var = (width - 10) / 2;
-  rest_length_right_var = (width - 10) / 2;
+  rest_length_left_var = (width - 150) / 2;
+  rest_length_right_var = (width - 150) / 2;
  
-  physics = new ParticleSystem(0.2, drag_var);
+  physics = new ParticleSystem(0.9, drag_var);
 
-  machine = physics.makeParticle(1.0, (width - 10) / 2, 0, 0);
+  machine = physics.makeParticle(0.5, (width - 10) / 2, 10, 0);
 
   left_anchor = physics.makeParticle(1.0, 5, 10, 0);
   left_anchor.makeFixed();
@@ -37,15 +39,19 @@ void setup() {
   right_anchor = physics.makeParticle(1.0, width - 5, 10, 0);
   right_anchor.makeFixed();
   
-  float strength = 1;
+  float strength = 0.5;
   
   println(rest_length_left_var + " " + rest_length_right_var);
   
   // p1, p2, strength, damping, minimum distance 
-  left_spring = physics.makeSpring(machine, left_anchor, strength, 1, rest_length_left_var);
+  left_spring = physics.makeSpring(machine, left_anchor, strength, 0.05, rest_length_left_var);
   left_spring.setRestLength(rest_length_left_var);
-  right_spring = physics.makeSpring(machine, right_anchor, strength, 1, rest_length_right_var);
+  right_spring = physics.makeSpring(machine, right_anchor, strength, 0.05, rest_length_right_var);
   right_spring.setRestLength(rest_length_right_var);
+  
+  
+  positions = new ArrayList<Vector3D>();
+  positions.add(machine.position());
 
   /* gui */
   controlP5 = new ControlP5(this);
@@ -57,18 +63,31 @@ void setup() {
 void draw() {
 
   physics.tick();
+  
+  Vector3D position = positions.get(positions.size()-1);
+  Vector3D mPosition = machine.position();
+  if(position.x() != mPosition.x() && position.y() != mPosition.y()) {
+    positions.add(mPosition);
+  }
 
-  background(255, 255, 255, .5);
+  stroke(204, 102, 0, 10);
+  line(machine.position().x(), mPosition.y(), left_anchor.position().x(), left_anchor.position().y());
+  line(machine.position().x(), mPosition.y(), right_anchor.position().x(), right_anchor.position().y());
 
-  line(machine.position().x(), machine.position().y(), left_anchor.position().x(), left_anchor.position().y());
-  line(machine.position().x(), machine.position().y(), right_anchor.position().x(), right_anchor.position().y());
+  int len = positions.size();
+  for(int i = 0; i < len; i++) {
+    Vector3D oldPosition = positions.get(i);
 
-  ellipse(machine.position().x(), machine.position().y(), 10, 10);
+    float alpha = map(i, 0, len, 0, 100);
+    noStroke();
+    fill(0, 0, 0, 50);
+    ellipse(oldPosition.x(), oldPosition.y(), 5, 5);  
+  }
 }
 
 void mousePressed()
 {
-   //right_spring.setRestLength(300);
+
 }
 
 public void drag(float theValue) {
